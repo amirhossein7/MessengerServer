@@ -1,5 +1,6 @@
 import { IUserQuery } from "../Interfaces";
 import User from "../models/User";
+import { verificatioExpiration } from "../../Tools/Verification";
 
 class UserQuery implements IUserQuery {
 
@@ -17,7 +18,8 @@ class UserQuery implements IUserQuery {
 
     async updateVerificationCode(code: number, phoneNumber: string): Promise<any> {
         User.update(
-            { verification_code: code },
+            { verification_code: code,
+            verification_code_expiration: verificatioExpiration()},
             { where: { phone_number: phoneNumber } }).then(_ => {
                 return Promise.resolve();
             }).catch(error => {

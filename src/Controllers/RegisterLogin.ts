@@ -8,7 +8,7 @@ import {sendVerificationCodeSMS} from '../Tools/SMS/Kavenegar';
 class Auth_controller {
 
     authUser(req: Request, res: Response){
-        try {
+        try {            
             const phone_number = req.body.phone_number as string;
             checkUserExistWithPhoneNumber(phone_number).then((user)=> {
                 if (user === null){

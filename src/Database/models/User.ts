@@ -1,6 +1,8 @@
 'use strict';
 import db from "../config/database.config";
 import { Model, DataTypes, UUIDV4  } from "sequelize";
+import { verificatioExpiration } from "../../Tools/Verification";
+
 
 interface IUser {
   id: string
@@ -9,6 +11,7 @@ interface IUser {
   last_name: string,
   phone_number: string,
   verification_code: number,
+  verification_code_expiration: string
   description: string,
   image: string,
   last_seen: Date
@@ -44,6 +47,11 @@ User.init({
         },
         verification_code: {
             type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        verification_code_expiration: {
+            type: DataTypes.STRING,
+            defaultValue: verificatioExpiration() ,
             allowNull: true
         },
         description: {
