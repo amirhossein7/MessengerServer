@@ -25,6 +25,17 @@ class UserQuery implements IUserQuery {
             });
     }
 
+    async updateUserInformation(params: any): Promise<any> {
+        User.update (
+            params,
+            {where: { phone_number: params.phone_number as string}}
+        ).then(_ => {
+            return Promise.resolve();
+        }).catch(error => {
+            return Promise.reject(error);
+        });
+    }
+
 }
 
 export default new UserQuery();

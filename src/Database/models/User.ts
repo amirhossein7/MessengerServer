@@ -3,6 +3,7 @@ import db from "../config/database.config";
 import { Model, DataTypes, UUIDV4  } from "sequelize";
 
 interface IUser {
+  id: string
   username: string,
   first_name: string,
   last_name: string,
@@ -18,11 +19,16 @@ export default class User extends Model<IUser>{}
 
 
 User.init({
-        username: {
+        id: {
             type: DataTypes.STRING,
             defaultValue: UUIDV4,
             allowNull: false,
-            primaryKey: true,
+            unique: true,
+            primaryKey: true
+        },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         first_name: {
             type: DataTypes.STRING,
@@ -54,9 +60,11 @@ User.init({
             allowNull: true
         }
 
-    }, {
-    sequelize: db,
-    modelName: 'User',
-});
+    },
+    {
+        sequelize: db,
+        modelName: 'User',
+    }
+);
 
 

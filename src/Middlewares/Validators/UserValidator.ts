@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { body, ValidationChain } from 'express-validator';
+import { body } from 'express-validator';
 import User from '../../Database/models/User';
 import UserQuery from '../../Database/queries/UserQuery';
 
@@ -10,20 +10,18 @@ const registerValidation = [
     body('username').notEmpty().withMessage('The username cannot be empty!'),
 ]
 
-const loginValidation = [
+const authenticationValidation = [
     body('phone_number').notEmpty().withMessage('The phone number cannot be empty!'),
     body('phone_number').isMobilePhone(['fa-IR']).withMessage('The phone number is not valid!'),
 ] 
 
 
 function checkUserExistWithPhoneNumber(phone_number: string): Promise<User | null> {
-    const user = UserQuery.findUserWithPhone(phone_number);
-    return user;
+    return UserQuery.findUserWithPhone(phone_number);
 }
 
 function checkUserExistWithUsername(username: string): Promise<User | null> {
-    const user = UserQuery.findUserWithUsername(username);
-    return user;
+    return UserQuery.findUserWithUsername(username);
 }
 
 function userExistanceValidation(req: Request, res: Response, next: NextFunction){
@@ -52,7 +50,7 @@ function userExistanceValidation(req: Request, res: Response, next: NextFunction
 
 export {
         registerValidation ,
-        loginValidation,
+        authenticationValidation,
         userExistanceValidation,
         checkUserExistWithPhoneNumber,
         checkUserExistWithUsername

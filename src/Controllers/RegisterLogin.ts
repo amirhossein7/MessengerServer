@@ -5,13 +5,33 @@ import { checkUserExistWithPhoneNumber } from '../Middlewares/Validators/UserVal
 import {sendVerificationCodeSMS} from '../Tools/SMS/Kavenegar';
 
 
-class CURD_controller {
-    registerUser (req: Request,res: Response) {
+class Auth_controller {
+
+    authUser(req: Request, res: Response){
+        try {
+            const phone_number = req.body.phone_number as string;
+            checkUserExistWithPhoneNumber(phone_number).then((user)=> {
+                if (user === null){
+                    return Auth_controller.registerUser(req, res);
+                }
+                return Auth_controller.loginUser(req, res);
+            }).catch((error) => {
+                return res.json({error: error, msg: `failed to auth user, reason: ${error}`, status: 500});
+            })
+        }catch(error){
+            return res.json({error: error, msg: `failed to auth user`, status: 501});
+        }
+    }
+
+
+    private static registerUser (req: Request,res: Response) {
         try {
             const verficationCode = Math.floor(1000 + Math.random() * 9000);
             const params = {...req.body, "verification_code": verficationCode};
 
             UserQuery.createUser(params).then(record => {
+                /* send verification sms */
+                // sendVerificationCodeSMS(verficationCode, phoneNumber);
                 return res.json({record, msg: "success", status: 201});
             }).catch(error => {
                 return res.json({msg: 'failed to create new user', error: error, status: 500, route: '/register'}).end(500);
@@ -26,30 +46,30 @@ class CURD_controller {
             const phone_number = req.body.phone_number as string;
             const verification_code = req.body.verification_code as number;
 
-            let record = checkUserExistWithPhoneNumber(phone_number);
             // get original Verify code
-            record.then((userInfo)=> {
+            checkUserExistWithPhoneNumber(phone_number).then((userInfo)=> {
                 const originalVerficationCode = userInfo?.getDataValue('verification_code');
-                return res.json({record, msg: "success", status: 200});
+                return res.json({userInfo, msg: "success", status: 200});
             }).catch((error) => {
-                return res.json({record, msg: `failed to verify code, reason: ${error}`, status: 500});
+                return res.json({msg: `failed to verify code, reason: ${error}`, status: 500});
             })
 
        }catch(error){
 
        }
     }
-    async loginUser (req: Request,res: Response) {
+    private static async loginUser (req: Request,res: Response) {
+        
         try {
             const phoneNumber = req.body.phone_number as string;
             const verficationCode = Math.floor(1000 + Math.random() * 9000);
             const record = checkUserExistWithPhoneNumber(phoneNumber);
 
             if (record != null){
-                // update verification code
+                /* update verification code */
                 UserQuery.updateVerificationCode(verficationCode, phoneNumber).then(_ => {
-                    // send verfication code sms;
-                    sendVerificationCodeSMS(verficationCode, phoneNumber)
+                    /* send verfication code sms */
+                    // sendVerificationCodeSMS(verficationCode, phoneNumber)
                     return res.json({msg: "Send the verification code", status: 200});
                 }).catch(error => {
                     return res.json({record, msg: `error in database: ${error}`, status: 500});
@@ -62,11 +82,25 @@ class CURD_controller {
         };
     }
 
-    async uploadProfileImage (req: Request, res: Response) {
+    async updateUserProfile (req: Request, res: Response) {
 
         try {
 
-            const username = req.query.username;
+            const image = Auth_controller.uploadImage(req);
+
+            const updateParameters = { ...req.body, 'image': image as string | ''};
+            UserQuery.updateUserInformation(updateParameters);
+
+            return res.json({msg: 'upload successfully', status: 200});
+
+        }catch(error){
+            return res.json({msg: 'upload failed', reason: error});
+        }
+    }
+
+    private static uploadImage(req: Request): void | string{
+        if ( req.files != null){
+            const username = req.body.username;
             console.log(username);
             
             const files = req.files as fileUpload.FileArray;
@@ -75,23 +109,14 @@ class CURD_controller {
             let upload_path: string = __dirname+'/../Uploads/'+ `/${username}/`+sampleFile.name;
     
             console.log(sampleFile.name); 
-
+    
             sampleFile.mv(upload_path,(error: any) => {
-                if (error) return res.json({msg: error}).end(500);
-                return res.json({msg: 'profile updated', status: 200});
+                if (error) return Promise.reject(error);
             })
-
-            // User.update(
-            //     {image: upload_path},
-            //     {where: req.body.username}
-            //     ).then((rowUpdated: any) => {
-            //         console.log('~~~~~> ', rowUpdated);
-                    
-            //     })
-        }catch(error){
-            return res.json({msg: 'upload failed', reason: error}).end(500);
+    
+            return upload_path
         }
     }
 }
 
-export default new CURD_controller();
+export default new Auth_controller();

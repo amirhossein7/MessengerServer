@@ -1,8 +1,8 @@
 import { Router } from "express";
-import MainController from '../Controllers/index';
-import CURD_controller from "../Controllers/CURD";
+import MainController from '../Controllers/Index';
+import Auth_controller from "../Controllers/RegisterLogin";
 import {registerValidation,
-        loginValidation,
+        authenticationValidation,
         userExistanceValidation,
         } from '../Middlewares/Validators/UserValidator';
 import ValidatorMiddleware from "../Middlewares/Validators/MainValidators";
@@ -18,23 +18,28 @@ class MainRouter {
 
     private configuration() {
         this.router.get('', MainController.index)
-        this.router.post('/register',
-                            registerValidation,
+        this.router.post('/authentication',
+                            authenticationValidation,
                             ValidatorMiddleware.userRequestValidation,
-                            userExistanceValidation,
-                            CURD_controller.registerUser
-                        );
+                            Auth_controller.authUser);
+        // this.router.post('/register',
+        //                     registerValidation,
+        //                     ValidatorMiddleware.userRequestValidation,
+        //                     userExistanceValidation,
+        //                     Auth_controller.registerUser
+        //                 );
         this.router.post('/verificationCode',
                             ValidatorMiddleware.userRequestValidation,
-                            CURD_controller.verifyUser
+                            Auth_controller.verifyUser
                         );
-        this.router.post('/login',
-                            loginValidation,
+        // this.router.post('/login',
+        //                     authenticationValidation,
+        //                     ValidatorMiddleware.userRequestValidation,
+        //                     Auth_controller.loginUser);
+        this.router.post('/updateUserProfile',
+                            authenticationValidation,
                             ValidatorMiddleware.userRequestValidation,
-                            CURD_controller.loginUser);
-        this.router.post('/uploadProfileImage',
-                            ValidatorMiddleware.userRequestValidation,
-                            CURD_controller.uploadProfileImage
+                            Auth_controller.updateUserProfile
                         );
     }
 }
