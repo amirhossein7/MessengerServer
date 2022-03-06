@@ -23,6 +23,20 @@ class Auth_controller {
         }
     }
 
+    updateUserProfile (req: Request, res: Response) {
+        try {
+            const image = Auth_controller.uploadImage(req);
+
+            const updateParameters = { ...req.body, 'image': image as string | ''};
+            UserQuery.updateUserInformation(updateParameters);
+
+            return res.json({msg: 'upload successfully', status: 200});
+
+        }catch(error){
+            return res.json({msg: 'upload failed', reason: error});
+        }
+    }
+
 
     private static registerUser (req: Request,res: Response) {
         try {
@@ -80,22 +94,6 @@ class Auth_controller {
         }catch(error){
             return res.json({msg: `failed to get login user \n ${error}`, status: 500, route: '/login'}).end(500);
         };
-    }
-
-    async updateUserProfile (req: Request, res: Response) {
-
-        try {
-
-            const image = Auth_controller.uploadImage(req);
-
-            const updateParameters = { ...req.body, 'image': image as string | ''};
-            UserQuery.updateUserInformation(updateParameters);
-
-            return res.json({msg: 'upload successfully', status: 200});
-
-        }catch(error){
-            return res.json({msg: 'upload failed', reason: error});
-        }
     }
 
     private static uploadImage(req: Request): void | string{
