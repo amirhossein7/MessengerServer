@@ -37,8 +37,8 @@ class MainRouter {
         //                     ValidatorMiddleware.userRequestValidation,
         //                     Auth_controller.loginUser);
         this.router.post('/updateUserProfile',
-                            authenticationValidation,
-                            ValidatorMiddleware.userRequestValidation,
+                            // authenticationValidation,
+                            // ValidatorMiddleware.userRequestValidation,
                             Auth_controller.updateUserProfile
                         );
     }
