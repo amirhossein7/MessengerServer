@@ -5,10 +5,12 @@ import { Model, DataTypes, UUIDV4  } from "sequelize";
 
 interface IMessage {
     id: string,
+    replay_id: string,
     from: string,
     to: string,
     content: string,
-    create_at: Date
+    create_at: Date,
+    update_at: Date
 }
 
 export default class Message extends Model<IMessage> {};
@@ -18,6 +20,10 @@ Message.init(
         id: {
             type: DataTypes.STRING,
             defaultValue: UUIDV4
+        },
+        replay_id: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         from: {
             type: DataTypes.STRING,
@@ -32,6 +38,11 @@ Message.init(
             allowNull: false
         },
         create_at: {
+            type: DataTypes.DATE,
+            defaultValue: Date,
+            allowNull: false
+        },
+        update_at: {
             type: DataTypes.DATE,
             defaultValue: Date,
             allowNull: false
