@@ -6,7 +6,8 @@ import runDatabase from "../Database/config/execute";
 import MainRouter from '../Routes/routes';
 import Socket from '../Tools/Socket/Index';
 import { createServer } from 'http';
-
+import {runRedis} from '../Tools/Storage/Redis/Index'
+import { exit } from 'process';
 
 const port = process.env.SERVER_PORT;
 const app = express();
@@ -28,7 +29,9 @@ function runServer(){
 }
 
 export default function fire(){
-    runDatabase(runServer);
+    runRedis(); 
+    runDatabase();
+    runServer();
 }
 
 
