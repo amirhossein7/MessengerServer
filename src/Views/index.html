@@ -12,6 +12,23 @@
             <input type="file" name="profile_image" accept="image/*"/>
             <input type="submit" class="btn btn-primary">
         </form>
+
+
+        <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io("http://localhost:3001", {extraHeaders: {
+                Authorization: "Bearer authorization_token_here",
+                miomio: "hasdkadasdnsa"
+            }});
+            console.log("~~~~~~~~~~");
+            function sendHelloWorld() {
+                socket.emit("message", {"HELLO WORLD": 12121});
+            }
+
+            function sendElahi() {
+                socket.emit("elahi", "************");
+            }
+        </script>
     </center>
 </body>
 </html>

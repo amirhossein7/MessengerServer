@@ -4,6 +4,8 @@ import * as bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import runDatabase from "../Database/config/execute";
 import MainRouter from '../Routes/routes';
+import Socket from '../Tools/Socket/Index';
+import { createServer } from 'http';
 
 
 const port = process.env.SERVER_PORT;
@@ -16,8 +18,11 @@ app.use(fileUpload({createParentPath: true}));
 
 app.use('/', MainRouter.router);
 
+
+const httpServer = createServer(app);
 function runServer(){
-    app.listen(port, () => {
+    new Socket(httpServer);
+    httpServer.listen(port, () => {
         console.log(`Server running on port: `,port);  
     })
 }

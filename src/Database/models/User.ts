@@ -14,7 +14,8 @@ interface IUser {
   verification_code_expiration: string
   description: string,
   image: string,
-  last_seen: Date
+  status: Boolean, // online or offline
+  last_activate_at: Date
 }
 
 
@@ -62,7 +63,11 @@ User.init({
             type: DataTypes.STRING,
             allowNull: true
         },
-        last_seen: {
+        status: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true
+        },
+        last_activate_at: {
             type: DataTypes.DATE,
             defaultValue: Date.now,
             allowNull: true
