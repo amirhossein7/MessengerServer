@@ -1,7 +1,7 @@
 'use strict';
 import db from "../config/database.config";
 import { Model, DataTypes, UUIDV4  } from "sequelize";
-import { verificatioExpiration } from "../../Tools/Verification";
+import { verificatioExpiration } from "../../Utils/Verification";
 
 
 interface IUser {

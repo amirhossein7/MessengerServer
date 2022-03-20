@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import fileUpload, { UploadedFile } from 'express-fileupload';
 import UserQuery from '../Database/queries/UserQuery';
 import { checkUserExistWithPhoneNumber } from '../Middlewares/Validators/UserValidator';
-import {sendVerificationCodeSMS} from '../Tools/SMS/Kavenegar';
+import {sendVerificationCodeSMS} from '../Utils/SMS/Kavenegar';
 
 
 class Auth_controller {

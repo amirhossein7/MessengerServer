@@ -13,7 +13,7 @@ class Socket {
 
     private start() {        
         this.io.on('connection', (socket: any) => {
-            console.log("socket connected");
+            console.log("socket connected ...");
             
         })
     }

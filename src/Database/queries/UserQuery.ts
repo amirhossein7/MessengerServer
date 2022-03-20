@@ -1,6 +1,6 @@
 import { IUserQuery } from "../Interfaces";
 import User from "../models/User";
-import { verificatioExpiration } from "../../Tools/Verification";
+import { verificatioExpiration } from "../../Utils/Verification";
 
 class UserQuery implements IUserQuery {
 

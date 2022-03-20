@@ -4,9 +4,9 @@ import * as bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import runDatabase from "../Database/config/execute";
 import MainRouter from '../Routes/routes';
-import Socket from '../Tools/Socket/Index';
+import Socket from '../Utils/Socket/Index';
 import { createServer } from 'http';
-import {runRedis} from '../Tools/Storage/Redis/Index'
+import {runRedis} from '../Utils/Storage/Redis/Index'
 import { exit } from 'process';
 
 const port = process.env.SERVER_PORT;
