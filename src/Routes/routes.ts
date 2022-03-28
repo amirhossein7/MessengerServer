@@ -1,11 +1,9 @@
 import { Router } from "express";
 import MainController from '../Controllers/Index';
 import Auth_controller from "../Controllers/RegisterLogin";
-import {registerValidation,
-        authenticationValidation,
-        userExistanceValidation,
-        } from '../Middlewares/Validators/UserValidator';
+import { authenticationValidation } from '../Middlewares/Validators/UserValidator';
 import ValidatorMiddleware from "../Middlewares/Validators/MainValidators";
+import MainValidators from "../Middlewares/Validators/MainValidators";
 
 class MainRouter {
 
@@ -17,25 +15,23 @@ class MainRouter {
     }
 
     private configuration() {
-        this.router.get('', MainController.index)
+        this.router.get('', 
+                            MainValidators.jwtValidation,
+                            MainController.index
+                        );
+
         this.router.post('/authentication',
                             authenticationValidation,
                             ValidatorMiddleware.userRequestValidation,
-                            Auth_controller.authUser);
-        // this.router.post('/register',
-        //                     registerValidation,
-        //                     ValidatorMiddleware.userRequestValidation,
-        //                     userExistanceValidation,
-        //                     Auth_controller.registerUser
-        //                 );
+                            MainValidators.jwtValidation,
+                            Auth_controller.authUser
+                        );
+
         this.router.post('/verificationCode',
                             ValidatorMiddleware.userRequestValidation,
                             Auth_controller.verifyUser
                         );
-        // this.router.post('/login',
-        //                     authenticationValidation,
-        //                     ValidatorMiddleware.userRequestValidation,
-        //                     Auth_controller.loginUser);
+
         this.router.post('/updateUserProfile',
                             // authenticationValidation,
                             // ValidatorMiddleware.userRequestValidation,

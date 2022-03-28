@@ -10,7 +10,7 @@ class JWT_handler {
 
     
     /// create token
-    static sign(object: object, expiration: string = "30s"): string {
+    static sign(object: object, expiration: string = "3d"): string {
         return jwt.sign(object, secret_key, {expiresIn: expiration})
     }
 

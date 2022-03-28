@@ -4,7 +4,7 @@ import path from 'path';
 
 class MainController {
 
-    index(req: Request, res: Response, next: NextFunction){
+    index(req: Request, res: Response, next: NextFunction){        
         return res.sendFile(path.resolve('./src/Views/index.html'));
     }
 }

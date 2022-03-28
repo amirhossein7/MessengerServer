@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { body } from 'express-validator';
 import User from '../../Database/models/User';
 import UserQuery from '../../Database/queries/UserQuery';
-
+import ErrorResponse from '../../Utils/Response/Response';
 
 const registerValidation = [
     body('phone_number').notEmpty().withMessage('The phone number cannot be empty!'),
@@ -30,20 +30,20 @@ function userExistanceValidation(req: Request, res: Response, next: NextFunction
     
     checkUserExistWithPhoneNumber(phone).then(user => {
         if(user != null){
-            return res.json({msg: 'A user exist with this phone number!'});
+            return ErrorResponse.client.conflict(res,'A user exist with this phone number!');
         }else{
             checkUserExistWithUsername(username).then((user) => {
                 if(user != null){
-                    return res.json({msg: 'A user exist with this username!'});
+                    return ErrorResponse.client.conflict(res, 'A user exist with this username!')
                 }else {
                     next();
                 }
             }).catch(error => {
-                return res.json({msg: 'An error occure in check user exsitance with username', error: error});
+                return ErrorResponse.server.internalServerError(res, 'An error occure in check user exsitance with username', error);
             })
         }
     }).catch((error) => {
-        return res.json({msg: 'An error occure in check user exsitance with phone number', error: error});
+        return ErrorResponse.server.internalServerError(res, 'An error occure in check user exsitance with phone number', error)
     })
 
 }

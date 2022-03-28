@@ -3,12 +3,15 @@ import fileUpload, { UploadedFile } from 'express-fileupload';
 import UserQuery from '../Database/queries/UserQuery';
 import { checkUserExistWithPhoneNumber } from '../Middlewares/Validators/UserValidator';
 import {sendVerificationCodeSMS} from '../Utils/SMS/Kavenegar';
+import JWT_handler from '../Utils/Verification/JWT/Jwt';
+import ErrorResponse from '../Utils/Response/Response';
 
 
 class Auth_controller {
 
     authUser(req: Request, res: Response){
         try {            
+            console.log(req.body);
             const phone_number = req.body.phone_number as string;
             checkUserExistWithPhoneNumber(phone_number).then((user)=> {
                 if (user === null){
@@ -16,10 +19,10 @@ class Auth_controller {
                 }
                 return Auth_controller.loginUser(req, res);
             }).catch((error) => {
-                return res.json({error: error, msg: `failed to auth user, reason: ${error}`, status: 500});
+                return ErrorResponse.server.internalServerError(res, 'failed to auth user', error);
             })
         }catch(error){
-            return res.json({error: error, msg: `failed to auth user`, status: 501});
+            return ErrorResponse.server.internalServerError(res, 'failed to auth user', error);
         }
     }
 
@@ -33,7 +36,7 @@ class Auth_controller {
             return res.json({msg: 'upload successfully', status: 200});
 
         }catch(error){
-            return res.json({msg: 'upload failed', reason: error});
+            return ErrorResponse.server.internalServerError(res, 'upload failed', error);
         }
     }
 
@@ -48,10 +51,10 @@ class Auth_controller {
                 // sendVerificationCodeSMS(verficationCode, phoneNumber);
                 return res.json({record, msg: "success", status: 201});
             }).catch(error => {
-                return res.json({msg: 'failed to create new user', error: error, status: 500, route: '/register'}).end(500);
+                return ErrorResponse.server.internalServerError(res, 'failed to create new user', error);
             });
         }catch(error){            
-            return res.json({msg: 'failed to create new user', error: error, status: 500, route: '/register'}).end(500);
+            return ErrorResponse.server.internalServerError(res, 'failed to create new user', error);
         };
     }
 
@@ -63,9 +66,14 @@ class Auth_controller {
             // get original Verify code
             checkUserExistWithPhoneNumber(phone_number).then((userInfo)=> {
                 const originalVerficationCode = userInfo?.getDataValue('verification_code');
-                return res.json({userInfo, msg: "success", status: 200});
-            }).catch((error) => {
-                return res.json({msg: `failed to verify code, reason: ${error}`, status: 500});
+                if (verification_code == originalVerficationCode){
+                    const token = JWT_handler.sign({user_id: userInfo?.getDataValue('id')});
+                    return res.json({token: token, msg: "success", status: 200});
+                }else {
+                    return ErrorResponse.client.badRequest(res, 'invalid verification code');
+                }
+             }).catch((error) => {
+                return ErrorResponse.server.internalServerError(res, 'failed to verify code', error);
             })
 
        }catch(error){
@@ -86,13 +94,13 @@ class Auth_controller {
                     // sendVerificationCodeSMS(verficationCode, phoneNumber)
                     return res.json({msg: "Send the verification code", status: 200});
                 }).catch(error => {
-                    return res.json({record, msg: `error in database: ${error}`, status: 500});
+                    return ErrorResponse.server.internalServerError(res, 'failed to get data from database', error);
                 });
             }else {
-                return res.json({record, msg: "there is no user with this inforamtion", status: 404});
+                return ErrorResponse.client.badRequest(res, 'there is no user with this inforamtion');
             }
         }catch(error){
-            return res.json({msg: `failed to get login user \n ${error}`, status: 500, route: '/login'}).end(500);
+            return ErrorResponse.server.internalServerError(res, 'Server failed', error);
         };
     }
 
