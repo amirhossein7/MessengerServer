@@ -16,14 +16,14 @@ class MainRouter {
 
     private configuration() {
         this.router.get('', 
-                            MainValidators.jwtValidation,
+                            // MainValidators.jwtValidation,
                             MainController.index
                         );
 
         this.router.post('/authentication',
                             authenticationValidation,
                             ValidatorMiddleware.userRequestValidation,
-                            MainValidators.jwtValidation,
+                            // MainValidators.jwtValidation,
                             Auth_controller.authUser
                         );
 

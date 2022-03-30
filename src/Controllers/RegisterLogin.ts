@@ -77,7 +77,7 @@ class Auth_controller {
             })
 
        }catch(error){
-
+            return ErrorResponse.server.internalServerError(res, 'failed to verify code', error);
        }
     }
     private static async loginUser (req: Request,res: Response) {

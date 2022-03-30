@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "test": "npx ts-node src/Tests/test.ts"
   },
   "keywords": [],
   "author": "",

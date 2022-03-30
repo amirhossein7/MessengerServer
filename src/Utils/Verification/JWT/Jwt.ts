@@ -1,6 +1,5 @@
 import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { rejects } from 'assert';
 dotenv.config();
 
 
@@ -15,7 +14,7 @@ class JWT_handler {
     }
 
     /// verify JWT
-    static verify(token: string): Promise<object> {
+    static verify(token: string): Promise<any> {
         const result = this.splitToken(token);
         return new Promise((resolve, reject) => {
             jwt.verify(result, secret_key, (error, decoded: any) => {
@@ -23,7 +22,7 @@ class JWT_handler {
                     reject(error.message);
                 }
                 else {
-                    resolve(decoded as object);
+                    resolve(decoded);
                 }
             });
         })

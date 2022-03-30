@@ -7,7 +7,6 @@ import MainRouter from '../Routes/routes';
 import Socket from '../Utils/Socket/Index';
 import { createServer } from 'http';
 import {runRedis} from '../Utils/Storage/Redis/Index'
-import { exit } from 'process';
 
 const port = process.env.SERVER_PORT;
 const app = express();
