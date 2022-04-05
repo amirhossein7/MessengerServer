@@ -24,7 +24,7 @@
         <script>
             const socket = io("http://localhost:3001", {
                 extraHeaders: {
-                    authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNDBkZTQ4OGUtNzIxZi00YjUwLTgxYzMtMjIyMjI5MjZkZmJjIiwiaWF0IjoxNjQ4OTgyMzUyLCJleHAiOjE2NDkyNDE1NTJ9.BFQh4oGWimD7RLaSuY-BAq5cU6ETyTchTNO5Kuc42eA",
+                    authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGU4Mzk4NmItNjk3Zi00NzAxLWE5NWUtZmNjZjFjNmFhNTYzIiwiaWF0IjoxNjQ4OTgyMjYyLCJleHAiOjE2NDkyNDE0NjJ9.NtyD1RJtB0mPiQR9Kc5S6etcq5w4dGE6AhRPVqLuO18",
                 }
             });
 
@@ -34,11 +34,7 @@
             })
             console.log("~~~~~~~~~~");
             function newChat() {
-                socket.emit("newChat", {
-                    "content": 12121,
-                    "from": "40de488e-721f-4b50-81c3-22222926dfbc",
-                    "to": "0e83986b-697f-4701-a95e-fccf1c6aa563"
-                });
+                socket.emit("newChat", { "from": 12121 });
             }
 
         </script>

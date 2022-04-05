@@ -15,7 +15,8 @@ interface IUser {
   description: string,
   image: string,
   status: Boolean, // online or offline
-  last_activate_at: Date
+  last_activate_at: Date,
+  user_state: number // 0->Initiated , 1->Completed
 }
 
 
@@ -71,8 +72,12 @@ User.init({
             type: DataTypes.DATE,
             defaultValue: Date.now,
             allowNull: true
+        },
+        user_state: {
+            type: DataTypes.NUMBER,
+            defaultValue: 0,
+            allowNull: true
         }
-
     },
     {
         sequelize: db,

@@ -30,7 +30,7 @@ class Auth_controller {
         try {
             const image = Auth_controller.uploadImage(req);
 
-            const updateParameters = { ...req.body, 'image': image as string | ''};
+            const updateParameters = { ...req.body, 'image': image as string | '', user_state: 1};
             UserQuery.updateUserInformation(updateParameters);
 
             return res.json({msg: 'upload successfully', status: 200});
@@ -80,6 +80,7 @@ class Auth_controller {
             return ErrorResponse.server.internalServerError(res, 'failed to verify code', error);
        }
     }
+
     private static async loginUser (req: Request,res: Response) {
         
         try {

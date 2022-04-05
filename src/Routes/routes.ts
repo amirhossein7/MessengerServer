@@ -20,6 +20,10 @@ class MainRouter {
                             MainController.index
                         );
 
+        this.router.get('/1',
+                            MainController.index1
+                        );
+
         this.router.post('/authentication',
                             authenticationValidation,
                             ValidatorMiddleware.userRequestValidation,

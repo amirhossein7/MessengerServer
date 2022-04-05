@@ -5,11 +5,13 @@ dotenv.config();
 
 const secret_key = process.env.JWT_SECRETKEY as jwt.Secret;
 
+const expiration_time: string = "3d";
+
 class JWT_handler {
 
     
     /// create token
-    static sign(object: object, expiration: string = "3d"): string {
+    static sign(object: object, expiration: string = expiration_time): string {
         return jwt.sign(object, secret_key, {expiresIn: expiration})
     }
 
