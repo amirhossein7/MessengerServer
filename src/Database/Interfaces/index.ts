@@ -5,3 +5,7 @@ export interface IUserQuery {
     findUserWithPhone(phone_number: String): any;
     updateVerificationCode(code: number, phoneNumber: string): Promise<void>;
 }
+
+export interface IMessageQuery {
+    saveMessage(params: any): any;
+}

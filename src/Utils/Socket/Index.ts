@@ -2,6 +2,7 @@ import {Server as SocketServer} from 'socket.io';
 import { Server } from 'http';
 import JWT_handler from '../Verification/JWT/Jwt';
 import { save, checkUserConnected } from '../Storage/Redis/Index';
+import MessageQuery from '../../Database/queries/MessageQuery';
 
 
 class Socket {
@@ -32,15 +33,21 @@ class Socket {
 
 
             socket.on("newChat", (data: any) => {
-                const from = data.from;
-                const to = data.to;
+                // const from = data.from;
+                // const to = data.to;
 
-                checkUserConnected(to).then( socket_id => {
-                    this.io.to(socket_id).emit('pvMessage', data);
-                })
                 // save message in database
+                MessageQuery.saveMessage(data).then((msg) => {
+                    const userID = msg.getDataValue("to");
+                    checkUserConnected(userID).then( socket_id => {
+                        this.io.to(socket_id).emit('pvMessage', data);
+                    })
+                }).catch(err => {
+                    console.log(err)
+                    // show error to sender
+                })
+
                 console.log(data);
-                
             })
 
             socket.on("disconnecting", (reason: any) => {
