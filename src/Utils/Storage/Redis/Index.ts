@@ -1,4 +1,3 @@
-import { rejects } from "assert";
 import Redis from "./Redis";
 
 const redis = new Redis();

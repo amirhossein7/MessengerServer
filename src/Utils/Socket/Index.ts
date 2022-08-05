@@ -38,7 +38,7 @@ class Socket {
                 checkUserConnected(to).then( socket_id => {
                     this.io.to(socket_id).emit('pvMessage', data);
                 })
-
+                // save message in database
                 console.log(data);
                 
             })
