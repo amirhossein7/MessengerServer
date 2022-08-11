@@ -4,7 +4,7 @@ import { Model, DataTypes, UUIDV4  } from "sequelize";
 
 
 interface IMessage {
-    id: string,
+    _id: string,
     replay_id: string,
     from: string,
     to: string,
@@ -17,7 +17,7 @@ export default class Message extends Model<IMessage> {};
 
 Message.init(
     {
-        id: {
+        _id: {
             type: DataTypes.STRING,
             defaultValue: UUIDV4
         },
