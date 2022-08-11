@@ -4,10 +4,13 @@ import Auth_controller from "../Controllers/RegisterLogin";
 import { authenticationValidation } from '../Middlewares/Validators/UserValidator';
 import ValidatorMiddleware from "../Middlewares/Validators/MainValidators";
 import MainValidators from "../Middlewares/Validators/MainValidators";
+import UserQuery from '../Database/queries/UserQuery';
+
 
 class MainRouter {
 
     public router: Router;
+    private auth_controller: Auth_controller = new Auth_controller(UserQuery);
 
     constructor() {
         this.router = Router();
@@ -28,18 +31,18 @@ class MainRouter {
                             authenticationValidation,
                             ValidatorMiddleware.userRequestValidation,
                             // MainValidators.jwtValidation,
-                            Auth_controller.authUser
+                            this.auth_controller.authUser
                         );
 
         this.router.post('/verificationCode',
                             ValidatorMiddleware.userRequestValidation,
-                            Auth_controller.verifyUser
+                            this.auth_controller.verifyUser
                         );
 
         this.router.post('/updateUserProfile',
                             // authenticationValidation,
                             // ValidatorMiddleware.userRequestValidation,
-                            Auth_controller.updateUserProfile
+                            this.auth_controller.updateUserProfile
                         );
     }
 }

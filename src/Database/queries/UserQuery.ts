@@ -1,4 +1,4 @@
-import { IUserQuery } from "../Interfaces";
+import { IUserQuery } from "../Interfaces/Index";
 import User from "../models/User";
 import { verificatioExpiration } from "../../Utils/Verification";
 

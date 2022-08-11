@@ -1,4 +1,4 @@
-import { IMessageQuery } from "../Interfaces";
+import { IMessageQuery } from "../Interfaces/Index";
 import Message from "../models/Message";
 
 

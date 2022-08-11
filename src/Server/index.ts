@@ -7,6 +7,7 @@ import MainRouter from '../Routes/routes';
 import Socket from '../Utils/Socket/Index';
 import { createServer } from 'http';
 import {runRedis} from '../Utils/Storage/Redis/Index'
+import MessageQuery from '../Database/queries/MessageQuery';
 
 const port = process.env.SERVER_PORT;
 const app = express();
@@ -21,7 +22,7 @@ app.use('/', MainRouter.router);
 
 const httpServer = createServer(app);
 function runServer(){
-    new Socket(httpServer);
+    new Socket(httpServer, MessageQuery);
     httpServer.listen(port, () => {
         console.log(`Server running on port: `,port);  
     })

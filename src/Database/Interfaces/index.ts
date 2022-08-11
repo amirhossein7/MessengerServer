@@ -4,6 +4,7 @@ export interface IUserQuery {
     findUserWithUsername(username: string): any;
     findUserWithPhone(phone_number: String): any;
     updateVerificationCode(code: number, phoneNumber: string): Promise<void>;
+    updateUserInformation(params: any): Promise<any>;
 }
 
 export interface IMessageQuery {

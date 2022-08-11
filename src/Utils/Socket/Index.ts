@@ -2,15 +2,17 @@ import {Server as SocketServer} from 'socket.io';
 import { Server } from 'http';
 import JWT_handler from '../Verification/JWT/Jwt';
 import { save, checkUserConnected } from '../Storage/Redis/Index';
-import MessageQuery from '../../Database/queries/MessageQuery';
+import { IMessageQuery } from "../../Database/Interfaces/Index"
 
 
 class Socket {
 
     private io: SocketServer;
+    private messageQuery: IMessageQuery;
 
-    constructor(server: Server){
+    constructor(server: Server, message_query: IMessageQuery){
         this.io = new SocketServer(server, {});
+        this.messageQuery = message_query;
         this.start();
     }
 
@@ -37,12 +39,12 @@ class Socket {
                 // const to = data.to;
 
                 // save message in database
-                MessageQuery.saveMessage(data).then((msg) => {
+                this.messageQuery.saveMessage(data).then((msg: { getDataValue: (arg0: string) => any; }) => {
                     const userID = msg.getDataValue("to");
                     checkUserConnected(userID).then( socket_id => {
                         this.io.to(socket_id).emit('pvMessage', data);
                     })
-                }).catch(err => {
+                }).catch((err: any) => {
                     console.log(err)
                     // show error to sender
                 })
