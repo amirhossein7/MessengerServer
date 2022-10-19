@@ -4,4 +4,3 @@ dist/
 src/Uploads/*
 src/Tests/*
 docker-compose.yaml
-Controllers
