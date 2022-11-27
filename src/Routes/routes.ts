@@ -1,7 +1,7 @@
 import { Router } from "express";
 import MainController from '../Controllers/Index';
 import Auth_controller from "../Controllers/RegisterLogin";
-import { authenticationValidation } from '../Middlewares/Validators/UserValidator';
+import UserValidation from '../Middlewares/Validators/UserValidator';
 import ValidatorMiddleware from "../Middlewares/Validators/MainValidators";
 import MainValidators from "../Middlewares/Validators/MainValidators";
 import UserQuery from '../Database/queries/UserQuery';
@@ -11,6 +11,7 @@ class MainRouter {
 
     public router: Router;
     private auth_controller: Auth_controller = new Auth_controller(UserQuery);
+    private user_validation: UserValidation = new UserValidation(UserQuery);
 
     constructor() {
         this.router = Router();
@@ -28,7 +29,7 @@ class MainRouter {
                         );
 
         this.router.post('/authentication',
-                            authenticationValidation,
+                        UserValidation.authenticationValidation,
                             ValidatorMiddleware.userRequestValidation,
                             // MainValidators.jwtValidation,
                             this.auth_controller.authUser

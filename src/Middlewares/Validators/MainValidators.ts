@@ -9,7 +9,6 @@ class ValidatorMiddleware {
         const error = validationResult(req);
         if (!error.isEmpty()){             
             return ErrorResponse.client.badRequest(res, null, error.array({onlyFirstError: true}));
-            
         }
         next();
     }

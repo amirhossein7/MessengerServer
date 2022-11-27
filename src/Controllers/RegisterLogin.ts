@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import fileUpload, { UploadedFile } from 'express-fileupload';
 import { IUserQuery } from '../Database/Interfaces/Index';
-import { checkUserExistWithPhoneNumber } from '../Middlewares/Validators/UserValidator';
+import UserValidation from '../Middlewares/Validators/UserValidator';
 import {sendVerificationCodeSMS} from '../Utils/SMS/Kavenegar';
 import JWT_handler from '../Utils/Verification/JWT/Jwt';
 import ErrorResponse from '../Utils/Response/Response';
@@ -10,16 +10,22 @@ import ErrorResponse from '../Utils/Response/Response';
 class Auth_controller {
 
     private userQuery: IUserQuery;
+    private userValidation: UserValidation;
 
     constructor(userQuery: IUserQuery) {
         this.userQuery = userQuery;
+        this.userValidation = new UserValidation(userQuery);
     }
 
-    authUser(req: Request, res: Response){
+    private get getValidator() {
+        return this.userValidation;
+    }
+
+    authUser = (req: Request, res: Response) => {
         try {            
             console.log(req.body);
             const phone_number = req.body.phone_number as string;
-            checkUserExistWithPhoneNumber(phone_number).then((user)=> {
+            this.getValidator.checkUserExistWithPhoneNumber(phone_number).then((user)=> {
                 if (user === null){
                     return this.registerUser(req, res);
                 }
@@ -32,7 +38,7 @@ class Auth_controller {
         }
     }
 
-    updateUserProfile (req: Request, res: Response) {
+    updateUserProfile = (req: Request, res: Response) => {
         try {
             const image = Auth_controller.uploadImage(req);
 
@@ -70,7 +76,7 @@ class Auth_controller {
             const verification_code = req.body.verification_code as number;
 
             // get original Verify code
-            checkUserExistWithPhoneNumber(phone_number).then((userInfo)=> {
+            this.userValidation.checkUserExistWithPhoneNumber(phone_number).then((userInfo)=> {
                 const originalVerficationCode = userInfo?.getDataValue('verification_code');
                 if (verification_code == originalVerficationCode){
                     const token = JWT_handler.sign({user_id: userInfo?.getDataValue('id')});
@@ -92,7 +98,7 @@ class Auth_controller {
         try {
             const phoneNumber = req.body.phone_number as string;
             const verficationCode = Math.floor(1000 + Math.random() * 9000);
-            const record = checkUserExistWithPhoneNumber(phoneNumber);
+            const record = this.userValidation.checkUserExistWithPhoneNumber(phoneNumber);
 
             if (record != null){
                 /* update verification code */

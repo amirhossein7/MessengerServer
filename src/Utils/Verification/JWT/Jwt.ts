@@ -10,12 +10,16 @@ const expiration_time: string = "3d";
 class JWT_handler {
 
     
-    /// create token
+    /**
+     * Sign data with system secret key
+     *  */ 
     static sign(object: object, expiration: string = expiration_time): string {
         return jwt.sign(object, secret_key, {expiresIn: expiration})
     }
 
-    /// verify JWT
+    /**
+     * Verfiying tocken 
+     *  */ 
     static verify(token: string): Promise<any> {
         const result = this.splitToken(token);
         return new Promise((resolve, reject) => {
